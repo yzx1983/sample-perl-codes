@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+$myfile = undef;
+
+sub showUsage()
+{
+  print STDERR << "EOF";
+  Usage:
+    myFileParser -f <xml file name>
+
+EOF
+  exit 0;
+}
+
+sub getParms()
+{
+  use Getopt::Std;
+   #the string contains all the flags could be use in the command line,
+   #each flag is a single character,if any flag needs value, add a ':' after the flag.
+  getopts('f:',\%opt) or showUsage();
+  $file = $opt{f} if defined $opt{f};
+
+  if (!(defined $myFile)) {
+    showUsage();
+    exit 0;
+  }
+}
+
+print "the file to open is $myFile\n";
+exit 0;
