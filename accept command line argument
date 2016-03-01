@@ -1,4 +1,7 @@
 #!/usr/bin/perl
+
+use strict;
+
 $myfile = undef;
 
 sub showUsage()
@@ -16,12 +19,31 @@ sub getParms()
   use Getopt::Std;
    #the string contains all the flags could be use in the command line,
    #each flag is a single character,if any flag needs value, add a ':' after the flag.
+  my %opt;  #we need declare it if we use "use strict".
   getopts('f:',\%opt) or showUsage();
   $file = $opt{f} if defined $opt{f};
 
   if (!(defined $myFile)) {
     showUsage();
     exit 0;
+  }
+}
+
+sub getParms_with_package_variable()
+{
+  use Getopt::Std;
+  use vars qw($opt_t); #explictedly declare to use the package variable.
+
+  getopts('t:') or showUsage();
+
+  $tier = $opt_t;
+
+  if (!(defined $tier)) {
+    $tier = -1;
+  }
+
+  if ($tier > 3) {
+    showUsage();
   }
 }
 
