@@ -1,0 +1,26 @@
+my @files = glob("dpa*.xml");
+
+my $rank_util_tmp_file = new IO::File "> $rank_util_tmp";
+
+foreach my $file (@files) 
+{
+  open( DPA_FILE, $file);
+  while( my $line = <DPA_FILE> )
+  {
+    if(( $line =~ m/<sample rank="(0x[0-9|a-f]+)" pool="(0x[0-9|a-f]+)" readCount="([0-9]+)" (\w+=[0-9|a-z|A-Z|"|.]+ )+readResponseTime="PT([0-9]+).([0-9]+)S" (\w+=[0-9|a-z|A-Z|"|.]+ )+accumDiskLoading="([0-9]+)" remoteAccumDiskLoading="([0-9]+)"\/>/) &&
+       ($rank_selected eq $1)) {
+      #print "\nDebugging info: display all values read from this dpa log file\n";
+      #print "rank:".$1."    "."accumDiskLoading:".$6."    "."remoteAccumDiskLoading:".$7."\n";
+      my $readCount = $3;
+      my $readResponseTime = $5; #ignore $4 ??
+      my $accu_val = $8;
+      my $remote_accu_val = $9;
+      $accu_val += $remote_accu_val;
+#      print "rank:".$1."    "."time:".$time."    "."accumDiskLoading:".$accu_val."\n";
+      print $rank_util_tmp_file "\n"."rank:".$1."    "."time:".$time."    "."accumDiskLoading:".$accu_val."    "."readResponseTime:".$readResponseTime."    "."readCount:".$readCount."\n";
+#      print "\n";
+    }
+  }
+  ...
+  close(DPA_FILE);
+}
